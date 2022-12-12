@@ -27,7 +27,8 @@ public class Categoria {
             foreignKey = @ForeignKey(name = "FK_CATEGORIA_CATEGORIA"))
     private Categoria categoriaPadre;
 
-    @OneToMany(mappedBy = "categoriaPadre" , fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "categoriaPadre" , fetch = FetchType.EAGER , cascade = {CascadeType})  //ELIMINAR SIN EL SET NULL
+
     private List<Categoria> categoriasHijas = new ArrayList<>();
 
     //CATEGORIAS
@@ -37,12 +38,20 @@ public class Categoria {
     @Builder.Default
     private List<Producto> producto = new ArrayList<>();
 
+
+    //PREREMOVE
     @PreRemove
     public void setNullProductos() {
         producto.forEach(p -> p.setCategoria(null));
     }
 
+    @PreRemove
+    public void setnullCategoriaHijas(){
+        categoriasHijas.forEach(c -> c.setCategoriaPadre(null));
+    }
 
+
+    //HELPERS
     public void addCategoriaPadre(Categoria c){
 
         this.setCategoriaPadre(c);
@@ -51,7 +60,7 @@ public class Categoria {
 
     public void removeCategoriaPadre(Categoria c){
 
-        this.setCategoriaPadre(null);
+        categoriaPadre= null;
         c.getCategoriasHijas().remove(this);
     }
 
@@ -61,7 +70,7 @@ public class Categoria {
     }
 
     public void removeCategoriaHijas(Categoria c){
-        this.setCategoriasHijas(null);
+        categoriasHijas= null;
         c.getCategoriasHijas().remove(this);
     }
 
