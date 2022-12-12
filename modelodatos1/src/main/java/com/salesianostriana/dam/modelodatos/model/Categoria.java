@@ -21,8 +21,16 @@ public class Categoria {
 
     private String nombre;
 
+    //categorias padres
     @ManyToOne
+    @JoinColumn(name = "categoria_padre",
+            foreignKey = @ForeignKey(name = "FK_CATEGORIA_CATEGORIA"))
     private Categoria categoriaPadre;
+
+    @OneToMany(mappedBy = "categoriaPadre" , fetch = FetchType.EAGER)
+    private List<Categoria> categoriasHijas = new ArrayList<>();
+
+    //CATEGORIAS
 
     @ToString.Exclude
     @OneToMany(mappedBy = "categoria", fetch = FetchType.EAGER)
@@ -33,5 +41,29 @@ public class Categoria {
     public void setNullProductos() {
         producto.forEach(p -> p.setCategoria(null));
     }
+
+
+    public void addCategoriaPadre(Categoria c){
+
+        this.setCategoriaPadre(c);
+        c.getCategoriasHijas().add(this);
+    }
+
+    public void removeCategoriaPadre(Categoria c){
+
+        this.setCategoriaPadre(null);
+        c.getCategoriasHijas().remove(this);
+    }
+
+    public void addCategoriaHija(Categoria c){
+        this.getCategoriasHijas().add(c);
+        c.setCategoriaPadre(this);
+    }
+
+    public void removeCategoriaHijas(Categoria c){
+        this.setCategoriasHijas(null);
+        c.getCategoriasHijas().remove(this);
+    }
+
 
 }
