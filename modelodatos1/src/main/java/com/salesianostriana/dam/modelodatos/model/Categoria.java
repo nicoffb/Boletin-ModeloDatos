@@ -27,7 +27,7 @@ public class Categoria {
             foreignKey = @ForeignKey(name = "FK_CATEGORIA_CATEGORIA"))
     private Categoria categoriaPadre;
 
-    @OneToMany(mappedBy = "categoriaPadre" , fetch = FetchType.EAGER , cascade = {CascadeType})  //ELIMINAR SIN EL SET NULL
+    @OneToMany(mappedBy = "categoriaPadre" , fetch = FetchType.EAGER) //,cascade = {CascadeType})  //ELIMINAR SIN EL SET NULL
 
     private List<Categoria> categoriasHijas = new ArrayList<>();
 
